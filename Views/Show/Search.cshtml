@@ -1,0 +1,6 @@
+﻿@model Cascade.PhotoSwipe.ViewModels.TagsViewModel
+@{ 
+    Html.AddTitleParts(T("Contents tagged with {0}", Model.TagName).ToString());
+}
+@Display.PhotoSwipeTag(Model)
+@Display(Model.Pager)

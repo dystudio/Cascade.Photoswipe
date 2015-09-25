@@ -1,0 +1,78 @@
+<!--Orchard Recipe-->
+<Orchard>
+  <Recipe>
+    <Name>Create Contact Widget</Name>
+    <Author>Dave Gardner</Author>
+    <ExportUtc>2015-04-28T03:53:14.0728025Z</ExportUtc>
+    <Description>Creates a ContactPart, Contact, Contact Form, enables the Email Module and the Workflow Module, and configures them. Please check email configuration after running this Recipe.</Description>
+    <WebSite>http://cascadepixels.com.au</WebSite>
+    <Tags>developer</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Email" />
+  <Feature enable="Orchard.Workflows" />
+  <Feature enable="Orchard.CustomForms" />
+
+  <Metadata>
+    <Types>
+      <Contact ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" DisplayName="Contact" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="False">
+        <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="False" />
+        <ContactPart />
+      </Contact>
+    </Types>
+    <Parts>
+      <ContactPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Attach this part to your type to provide Contact details (Email, Name, Message, etc)" ContentPartLayoutSettings.Placable="False">
+        <Name.TextField DisplayName="Name" TextFieldSettings.Required="True" TextFieldSettings.Flavor="Large" />
+        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" />
+        <Message.TextField DisplayName="Message" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Textarea" />
+      </ContactPart>
+    </Parts>
+  </Metadata>
+  
+  <Data>
+    <CustomFormWidget Id="/Identifier=c8787ab1f9eb4829b488e9d9941f9611" Status="Published">
+      <IdentityPart Identifier="c8787ab1f9eb4829b488e9d9941f9611" />
+      <CommonPart Owner="/User.UserName=admin" Container="/Layer.LayerName=Contact Page" CreatedUtc="2015-04-28T03:29:40.7841889Z" PublishedUtc="2015-04-28T03:29:40.8646925Z" ModifiedUtc="2015-04-28T03:29:40.8546854Z" />
+      <WidgetPart Title="Send a Message" Position="1" Zone="Content" RenderTitle="true" Name="contactmessage" />
+      <CustomFormPart ContentType="Contact" SaveContentItem="true" CustomMessage="true" Message="Thanks for getting in touch. We'll get back to you as soon as possible." Redirect="true" RedirectUrl="~/" SubmitButtonText="Send Message" />
+    </CustomFormWidget>
+    <Layer Id="/Layer.LayerName=Contact Page" Status="Published">
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-28T03:31:01.3728402Z" PublishedUtc="2015-04-28T03:31:01.3865644Z" ModifiedUtc="2015-04-28T03:31:01.4135834Z" />
+      <LayerPart Name="Contact Page" Description="Contact Us page" LayerRule="url('~/contact-us')" />
+    </Layer>
+    <Page Id="/alias=contact-us" Status="Published">
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-28T03:35:41.3712683Z" PublishedUtc="2015-04-28T03:35:41.3712683Z" ModifiedUtc="2015-04-28T03:35:41.2934694Z" />
+      <TagsPart Tags="" />
+      <AutoroutePart Alias="contact-us" UseCustomPattern="false" />
+      <TitlePart Title="Contact Us" />
+      <LayoutPart>
+        <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"TypeName=Orchard.Layouts.Elements.Html&amp;Text=%3cp%3eFeel+free+to+send+us+a+message.%3c%2fp%3e&amp;Content=%3cp%3eFeel+free+to+send+us+a+message.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":null,"htmlClass":null,"htmlStyle":null}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":""}]}</LayoutData>
+      </LayoutPart>
+    </Page>
+  </Data>
+
+  <Settings>
+    <SmtpSettingsPart Address="depiction@reelmedia.com.au" Host="smtp.sendgrid.net" Port="25" EnableSsl="false" RequireCredentials="true" UserName="azure_2ef860ebcfc6dd365cec22f12287ebdc@azure.com" Password="azure_2ef860ebcfc6dd365cec22f12287ebdc@azure.com" />
+  </Settings>
+
+  <Workflows>
+    <Workflow Name="Send Message" Enabled="true">
+      <Activities>
+        <Activity Id="1" Name="FormSubmitted" Start="true" X="634" Y="282">
+          <State>{"CustomForms":"/Identifier=c8787ab1f9eb4829b488e9d9941f9611"}</State>
+        </Activity>
+        <Activity Id="2" Name="SendEmail" Start="false" X="660" Y="462">
+          <State>{"Recipients":"dave@cascadepixels.com.au","Bcc":"","CC":"","ReplyTo":"noreply@cascadepixels.com.au","Subject":"Message from {Content.Fields.ContactPart.Name}","Body":"\r\n{Content.Fields.ContactPart.Name}&lt;br/&gt;\r\n{Content.Fields.ContactPart.Email}&lt;br/&gt;\r\n{Content.Fields.ContactPart.Message}"}</State>
+        </Activity>
+      </Activities>
+      <Transitions>
+        <Transition SourceActivityId="1" SourceEndpoint="Done" DestinationActivityId="2" DestinationEndpoint="" />
+      </Transitions>
+    </Workflow>
+  </Workflows>
+  
+  <Command>
+    menuitem create /MenuPosition:"6" /MenuText:"Contact" /Url:"~/contact-us" /MenuName:"Main Menu"
+  </Command>
+</Orchard>

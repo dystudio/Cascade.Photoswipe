@@ -1,0 +1,133 @@
+﻿﻿@model Cascade.PhotoSwipe.Models.PhotoSwipeSettingsPart
+
+@{
+    List<SelectListItem> scaleModes = new List<SelectListItem>();
+    scaleModes.Add(new SelectListItem { Text = "Fit", Value = "fit" });
+    scaleModes.Add(new SelectListItem { Text = "Fill", Value = "fill" });
+    scaleModes.Add(new SelectListItem { Text = "Original", Value = "orig" });
+    }
+
+
+<fieldset>
+    <legend>@T("PhotoSwipe Options")</legend>
+    <h3>Expanded Images</h3>
+    <span class="hint">@T("These settings control the size and quality of expanded lightbox images. Sizes are maximums and will be limited by the device viewport.")</span>
+
+    <div>
+        @T("Maximum Width") @Html.EditorFor(m => m.Width)
+        <span class="hint">@T("Maximum width of lightbox image. If 0 then width will be calculated from height.")</span>
+    </div>
+    <div>
+        @T("Maximum Height") @Html.EditorFor(m => m.Height)
+        <span class="hint">@T("Maximum height of lightbox image. If 0 then height will be calculated from width")</span>
+    </div>
+    <div>
+        @T("Quality") @Html.EditorFor(m => m.Quality)
+        <span class="hint">@T("JPEG image quality for expanded images.")</span>
+    </div>
+    <div>
+        @T("Scale Mode") @Html.DropDownListFor(m => m.ScaleMode, scaleModes.AsEnumerable())
+        <span class="hint">@T("Governs the scaling of the image relative to the viewport.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowLightboxTitles)@T("Show Lightbox Title")
+        <span class="hint">@T("Show a Title under each expanded image.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowLightboxCaptions)@T("Show Lightbox Caption")
+        <span class="hint">@T("Show a Caption under each expanded image.")</span>
+    </div>
+
+
+
+    <h3>Thumbnail Images</h3>
+    <span class="hint">@T("These settings control the quality and size of thumbnails. At least one of Height and Width must be non-zero. If only one is set the other is calculated.")</span>
+    
+    <div>
+        @T("Thumbnail Width") @Html.EditorFor(m => m.ThumbWidth)
+        <span class="hint">@T("Width of thumnail lightbox images. If 0 then width will be calculated from height.")</span>
+    </div>
+    <div>
+        @T("Thumbnail Height") @Html.EditorFor(m => m.ThumbHeight)
+        <span class="hint">@T("Height of thumbnail lightbox images. If 0 then height will be calculated from width.")</span>
+    </div>
+    <div>
+        @T("Thumbnail Quality") @Html.EditorFor(m => m.ThumbnailQuality)
+        <span class="hint">@T("JPEG image quality for thumbnail images.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowThumbTitles)@T("Show Thumbnail Titles")
+        <span class="hint">@T("Display the image title under the thumbnails.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.ShowThumbCaptions)@T("Show Thumbnail Captions")
+        <span class="hint">@T("Display the image caption under the thumbnails.")</span>
+    </div>
+
+
+    <h3>Transitions</h3>
+    <div>
+        @T("Open Speed") @Html.EditorFor(m => m.OpenSpeed)
+        <span class="hint">@T("Duration of effect to use when lightbox opens (ms).")</span>
+    </div>
+    <div>
+        @T("Close Speed") @Html.EditorFor(m => m.CloseSpeed)
+        <span class="hint">@T("Duration of effect to use when lightbox closes (ms).")</span>
+    </div>
+<div>
+        @Html.CheckBoxFor(m => m.Loop)@T("Loop")
+        <span class="hint">@T("Loop back to first/last image when last/first is reached.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.CloseOnScroll)@T("Close On Scroll")
+        <span class="hint">@T("Close the lightbox if image is scrolled vertically.")</span>
+    </div>
+    <div>
+        @Html.CheckBoxFor(m => m.CloseOnScroll)@T("Close On Vertical Drag")
+        <span class="hint">@T("Close the lightbox if image is vertically dragged.")</span>
+    </div>
+    <div>
+        @T("Show/Hide Opacity") @Html.EditorFor(m => m.ShowHideOpacity)
+        <span class="hint">@T("Set this option if your thumbnail's proportions differ from your expanded image proportions.")</span>
+    </div>
+
+
+    <h3>Performance Options</h3>
+    <div>
+        @T("Preload Before") @Html.EditorFor(m => m.PreloadBefore)
+        <span class="hint">@T("Number of images to preload before current image, taking into account direction of travel.")</span>
+    </div>
+    <div>
+        @T("Preload After") @Html.EditorFor(m => m.PreloadBefore)
+        <span class="hint">@T("Number of images to preload after current image, taking into account direction of travel.")</span>
+    </div>
+
+    <h3>Lightbox Styling and Appearance </h3>
+    <div>
+        @T("Lightbox Background Opacity") @Html.EditorFor(m => m.BackgroundOpacity)
+        <span class="hint">@T("0 is completely transparent, 1 is a solid color.")</span>
+    </div>
+    <div>
+        @T("Time to Idle") @Html.EditorFor(m => m.TimeToIdle)
+        <span class="hint">@T("Time (ms) before UI lightbox controls are hidden.")</span>
+    </div>
+    <div>
+        @T("Time to Idle Outside") @Html.EditorFor(m => m.TimeToIdleOutside)
+        <span class="hint">@T("Time (ms) before UI lightbox controls are hidden when the mouse is moved outside the browser window.")</span>
+    </div>
+    <div>
+        @T("Show Zoom Control") @Html.EditorFor(m => m.ShowZoom)
+        <span class="hint">@T("Set this option to allow the user to zoom the image.")</span>
+    </div>
+    <div>
+        @T("Show Share Control") @Html.EditorFor(m => m.ShowShare)
+        <span class="hint">@T("Set this option to allow the user to share images on facebook etc.")</span>
+    </div>
+    <div>
+        @T("Show Full Screen Control") @Html.EditorFor(m => m.ShowFullscreen)
+        <span class="hint">@T("Set this option to allow the user to select full screen mode while browsing images.")</span>
+    </div>
+
+
+</fieldset>
+

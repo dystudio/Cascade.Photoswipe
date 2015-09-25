@@ -1,0 +1,21 @@
+﻿﻿@model Cascade.PhotoSwipe.Models.UseragentRedirectSettingsPart
+
+
+<fieldset>
+    <legend>@T("Useragent Redirection Settings")</legend>
+    <span class="hint">@T("These settings can be used to redirect a browser to a different url if a particular text is found in the Useragent string. The most immediate use is to redirect phones to a different page.")</span>
+
+    <div>
+        @T("Useragent Keyword") @Html.EditorFor(m => m.UseragentKeyword)
+        <span class="hint">@T("The case-insensitive word to look for in the browser user agent string. eg: phone")</span>
+    </div>
+    <div>
+        @T("Path to be Replaced") @Html.EditorFor(m => m.Path)
+        <span class="hint">@T("The component of the url that will be replaced when the keyword is present. eg: /show")</span>
+    </div>
+    <div>
+        @T("Replacement Path") @Html.EditorFor(m => m.ReplacementPath)
+        <span class="hint">@T("The new path component. eg: /mobile-show")</span>
+    </div>
+</fieldset>
+

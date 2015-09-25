@@ -1,0 +1,20 @@
+﻿@using Orchard.Tags.Models
+<ul class="media-tag-cloud">
+    @foreach (TagCount tagCount in Model.TagCounts)
+    {
+        var text = tagCount.TagName;
+        string classes = "";
+        if (Model.ContentPart.DisplayContentCount)
+        {
+            text += " (" + tagCount.Count.ToString() + ")";
+        }
+        if (String.Compare(Model.TagName, tagCount.TagName, true) == 0)
+        {
+            classes = "active";
+        }
+
+        <li class="media-tag-cloud-tag tag-cloud-tag-@tagCount.Bucket">
+            @Html.ActionLink(text, "Search", "Show", new{area = "Cascade.PhotoSwipe", tagName = tagCount.TagName}, new { @class = classes } )
+        </li>
+    }
+</ul>

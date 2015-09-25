@@ -1,0 +1,77 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.MediaLibrary.Models
+@using Cascade.PhotoSwipe.Models
+@using System.Linq
+@using Orchard.UI.Resources;
+@using Orchard.Core.Title.Models;
+@using Orchard.Tags.Models
+
+@{
+    // enable these if you want FlipCard support
+    //Script.Require("FlipCard");
+    //Style.Require("FlipCard");
+
+    var settings = WorkContext.CurrentSite.As<PhotoSwipeSettingsPart>();
+    MediaPart media = Model.Item.MediaPart;
+    ImagePart image = Model.Item.ImagePart;
+    string classes = Model.ItemClasses;
+    
+    if (media != null && !string.IsNullOrEmpty(media.FileName))
+    {
+        string url = media.MediaUrl;
+        string title = "", caption = "";
+        List<string> thumbText = new List<string>(), psText = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(media.Title))
+        {
+            title = "<span class='title'>" + media.Title.Replace("\"", "") + "</span>";
+            if (settings.ShowThumbTitles )
+            {
+                thumbText.Add(title);
+            }
+            if (settings.ShowLightboxTitles)
+            {
+                psText.Add(title);
+            }
+        }
+        if (!string.IsNullOrWhiteSpace(media.Caption))
+        {
+            caption = "<span class='caption'>" + media.Caption.Replace("\"", "") + "</span>";
+            if (settings.ShowThumbCaptions )
+            {
+                thumbText.Add(caption);
+            }
+            if (settings.ShowLightboxCaptions )
+            {
+                psText.Add(caption);
+            }
+        }
+
+        // thumb title and caption
+        HtmlString thumbTitleCaption = new HtmlString(string.Join(" ", thumbText));
+
+        // ps title and caption
+        HtmlString psTitleCaption = new HtmlString(string.Join(" ", psText));
+
+        
+
+        double aspect = (double)image.Width / (double)image.Height;
+        int thumbWidth = (int)(settings.ThumbHeight * aspect);
+
+
+        @* Set width of figure explicitly to ensure figcaption wraps correctly. Padding is 2 all round so add 4.
+            This setting must match the corresponding css padding (set by default in cascade-skin.scss)*@
+        var padding = 2;
+        <figure class="@classes" itemscope itemtype="http://schema.org/ImageObject" style="width:@(thumbWidth + padding * 2)px;">
+            <a data-title="@psTitleCaption" href="@url?mode=max&format=jpg&quality=@settings.Quality&width=@settings.Width&height=@settings.Height" itemprop="contentUrl" data-size="@(image.Width.ToString() + "x" + image.Height.ToString())" data-limit="@(settings.Width.ToString() + "x" + settings.Height.ToString())">
+                <img src="@url?format=jpg&mode=max&quality=@settings.ThumbnailQuality&width=@thumbWidth&height=@settings.ThumbHeight" alt="@media.AlternateText" itemprop="thumbnail" />
+            </a>
+            @if (settings.ShowThumbCaptions || settings.ShowThumbCaptions)
+            {
+                <figcaption itemprop="caption description">
+                    @thumbTitleCaption
+                </figcaption>
+            }
+        </figure>
+    }
+}

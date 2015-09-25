@@ -1,0 +1,163 @@
+﻿@*
+
+    PhotoSwipe Mobile template
+
+    Todo:
+    1. Create separate settings for Mobile?
+    2. Support for captions?
+
+    NOTES:
+    1. Depends on ImageResizer to provide images of the right size
+    2. At the moment, the aspect ratio on the thumb must be the same as the expanded image, or strange things will happen. You can try setting option showHideOpacity:true if the aspect ratios differ
+    3. Displays gallery immediately; thumbnails are NOT displayed at all.
+
+*@
+
+@using Orchard.ContentManagement;
+@using Orchard.MediaLibrary.Models
+@using Cascade.PhotoSwipe.Models
+@using System.Linq
+@using Orchard.UI.Resources;
+@using Orchard.Core.Title.Models;
+
+
+@{
+    IEnumerable<dynamic> items = Model.List.Items;
+
+
+    var settings = WorkContext.CurrentSite.As<PhotoSwipeSettingsPart>();
+
+    Script.Require("PhotoSwipe");
+    Script.Require("PhotoSwipe.UI");
+    //Script.Require("InitializePhotoSwipe");
+
+    Style.Require("PhotoSwipe");
+    Style.Require("PhotoSwipe.DefaultSkin");
+
+
+    // initiate PhotoSwipe ///////////////////////////////////////
+    using (Script.Foot())
+    {
+        <script type="text/javascript">
+            var pswpElement = document.querySelectorAll('.pswp')[0];
+
+            // build items array
+            var things = [
+                @foreach (var ii in items)
+                {
+                    // These are ZoneHoldings so we need to extract the contentItem:
+                    var item = ii.ContentItem;
+
+                    ImagePart image = item.ImagePart;
+                    MediaPart media = item.MediaPart;
+                    //TitlePart titlepart = item.TitlePart;
+
+                    //string url = media.MediaUrl;
+                    //string title = titlepart.Title;
+                    double aspect = (double)image.Width / (double)image.Height;
+                    int iPhone6Height = 375;
+                    int iPhone6Width = (int)(iPhone6Height * aspect);
+
+
+                    <text>{src: '@media.MediaUrl?width=@iPhone6Width&height=@iPhone6Height&quality=@settings.Quality&format=jpg', w: @iPhone6Width, h: @iPhone6Height},</text>
+                }
+            ];
+
+            // PhotoSwipe options for mobile
+            var options = {
+                index: 0, // start at first slide
+                loop:  '@settings.Loop' == 'True',
+                zoomEl: '@settings.ShowZoom' == 'True',
+                shareEl: '@settings.ShowShare' == 'True',
+                fullscreenEl: '@settings.ShowFullscreen' == 'True',
+                closeOnScroll: false,
+                closeOnVerticalDrag: false,
+                phone:true
+            };
+
+            // Initializes and opens PhotoSwipe
+            var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Cascade, things, options);
+            gallery.init();
+        </script>
+    }
+
+}
+
+@* The following 'template' is used by PhotoSwipe. I could have moved it to the JS, as most other lightboxes do,
+    but then that makes it hard to modify the UI of the lightbox itself. For flexibility I've put it in the Orchard View,
+    so that you can change the UI without having to touch the JS.
+
+        You need to keep the overall structure. If you want to change something use the following process:
+        1. Is there an option for it?
+            1.1 Is there an Orchard Setting?
+            1.2 Is there a PhotoSwipe option (see <script> tag above)
+        2. Can you change it by changing the css? See photoswipe-ui-default.scss (and css).
+        3. Add or delete elements from the template below, but listen to the comments.
+        4. If all else fails then you'll need to hack the JS. See photoswipe-ui-default.js.
+
+*@
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element, as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"><i class="fa fa-close pswp__button--close"></i></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"><i class="fa fa-share pswp__button--share"></i></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"><i class="fa fa-expand pswp__button--fs"></i></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"><i class="fa fa-search-plus pswp__button--zoom"></i></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (left arrow key)"><i class="fa fa-chevron-circle-left pswp__button--arrow--symbol--left"></i></button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (right arrow key)"><i class="fa fa-chevron-circle-right pswp__button--arrow--symbol--right"></i></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

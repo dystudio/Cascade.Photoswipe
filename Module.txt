@@ -1,0 +1,11 @@
+﻿Name: Cascade.PhotoSwipe
+AntiForgery: enabled
+Author: Dmitry Semenov (PhotoSwipe), Dave Gardner (Orchard Module)
+Website: http://cascadepixels.com.au
+Version: 1.0.2
+OrchardVersion: 1.9.1
+Description: A simple, fast, touch-supporting, responsive image lightbox, using Photoswipe 4. Supports using a Projection with a variety of templates to format the lightbox (start with the PhotoSwipe shape).
+Dependencies: Orchard.jQuery, Cascade.Isotope2
+Features:
+    Cascade.PhotoSwipe:
+        Description: Simple, fast, touch-supporting, responsive image lightbox. 

@@ -1,0 +1,197 @@
+﻿@*
+
+    PhotoSwipe Gallery template
+
+    NOTES:
+    1. Depends on ImageResizer to provide images of the right size
+    2. At the moment, the aspect ratio on the thumb must be the same as the expanded image, or strange things will happen. You can try setting option showHideOpacity:true if the aspect ratios differ
+
+*@
+
+@using Orchard.ContentManagement;
+@using Orchard.MediaLibrary.Models
+@using Cascade.PhotoSwipe.Models
+@using System.Linq
+@using Orchard.UI.Resources;
+@using Orchard.Core.Title.Models;
+@using Orchard.Tags.Models
+
+
+@{
+    IEnumerable<dynamic> items = Model.MediaParts;
+
+
+    var settings = WorkContext.CurrentSite.As<PhotoSwipeSettingsPart>();
+
+    Script.Require("PhotoSwipe");
+    Script.Require("PhotoSwipe.UI");
+    Script.Require("InitializePhotoSwipe");
+
+    Style.Require("PhotoSwipe");
+    Style.Require("PhotoSwipe.DefaultSkin");
+
+
+    // initiate PhotoSwipe ///////////////////////////////////////
+    using (Script.Foot())
+    {
+        <script type="text/javascript">
+
+            function isTrue(v){
+                return v == 'True';
+            }
+
+
+            // see InitializePhotoSwipe.js
+            initPhotoSwipeFromDOM('.my-gallery', {
+                flip: false,
+                selectedClass: selectedClass,
+                bgOpacity: @settings.BackgroundOpacity,
+                showHideOpacity: isTrue('@settings.ShowHideOpacity'),
+                preload: [@settings.PreloadBefore, @settings.PreloadAfter],
+                loop: isTrue('@settings.Loop'),
+                closeOnScroll: isTrue('@settings.CloseOnScroll'),
+                closeOnVerticalDrag: isTrue('@settings.CloseOnVerticalDrag'),
+                hideAnimationDuration: @settings.CloseSpeed,
+                showAnimationDuration: @settings.OpenSpeed,
+                errorMsg: "<div class='pswp__error-msg'>Sorry, we can't display <a href='%url%' target='_blank'> that image</a> just now. Please try again later.</div>",
+                scaleMode: '@settings.ScaleMode',
+                zoomEl: null,
+                captionEl: document.getElementById('cascade-caption'),
+                getDoubleTapZoom: function(isMouseClick, item) {
+                    return item.initialZoomLevel;
+                },
+                fullscreenEl: isTrue('@settings.ShowFullscreen'),
+                zoomEl: isTrue('@settings.ShowZoom'),
+                shareEl: isTrue('@settings.ShowShare')
+            });
+
+        </script>
+    }
+
+    @* Get unique Tags *@
+    List<string> uniqueTags = new List<string>();
+    if (items != null && items.Any())
+    {
+        foreach (var item in items)
+        {
+            if (item != null)
+            {
+                TagsPart part = item.TagsPart;
+                if (part != null && part.CurrentTags != null)
+                {
+                    foreach (var t in part.CurrentTags)
+                    {
+                        if (!uniqueTags.Contains(t))
+                        {
+                            uniqueTags.Add(t);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    <div id="cascade-tags">
+        <ul class="portfolio_filters">
+            <li>
+                <a class="active" href="#" data-filter="*">All</a>
+            </li>
+            @foreach (var tag in uniqueTags.OrderBy(t => t))
+            {
+                <li>
+                    <a href="#" data-filter=".@tag.Replace(' ', '-')" data-selector="@tag">@tag</a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="row-fluid gallery-row">
+        <div id="gallery" class="span10">
+            <div class="my-gallery">
+
+                @foreach (var item in items)
+                {
+                    @Display.PhotoSwipeItem(Item: item, ItemClasses: "")
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@* The following 'template' is used by PhotoSwipe. I could have moved it to the JS, as most other lightboxes do,
+    but then that makes it hard to modify the UI of the lightbox itself. For flexibility I've put it in the Orchard View,
+    so that you can change the UI without having to touch the JS.
+
+        You need to keep the overall structure. If you want to change something use the following process:
+        1. Is there an option for it?
+            1.1 Is there an Orchard Setting?
+            1.2 Is there a PhotoSwipe option (see <script> tag above)
+        2. Can you change it by changing the css? See photoswipe-ui-default.scss (and css).
+        3. Add or delete elements from the template below, but listen to the comments.
+        4. If all else fails then you'll need to hack the JS. See photoswipe-ui-default.js.
+
+*@
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element, as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Photoswipe interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"><i class="fa fa-close pswp__button--close"></i></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"><i class="fa fa-share pswp__button--share"></i></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"><i class="fa fa-expand pswp__button--fs"></i></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"><i class="fa fa-search-plus pswp__button--zoom"></i></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (left arrow key)"><i class="fa fa-chevron-circle-left pswp__button--arrow--symbol--left"></i></button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (right arrow key)"><i class="fa fa-chevron-circle-right pswp__button--arrow--symbol--right"></i></button>
+
+            <div id="cascade-caption" class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

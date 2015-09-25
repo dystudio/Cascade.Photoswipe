@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0E56FD2C-4334-4AAD-98C2-9DE7B830AAE1}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cascade.PhotoSwipe</RootNamespace>
+    <AssemblyName>Cascade.PhotoSwipe</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Recipes\CreateContactForm.recipe.xml" />
+    <Content Include="Recipes\CreateContactFormWidget.recipe.xml" />
+    <Content Include="Scripts\InitializePhotoSwipe.min.js">
+      <DependentUpon>InitializePhotoSwipe.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\photoswipe-ui-cascade.js" />
+    <Content Include="Scripts\photoswipe-ui-cascade.min.js">
+      <DependentUpon>photoswipe-ui-cascade.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\photoswipe.js" />
+    <Content Include="Scripts\photoswipe.min.js">
+      <DependentUpon>photoswipe.js</DependentUpon>
+    </Content>
+    <Content Include="Styles\cascade-skin.css">
+      <DependentUpon>cascade-skin.scss</DependentUpon>
+    </Content>
+    <Content Include="Styles\cascade-skin.min.css">
+      <DependentUpon>cascade-skin.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\photoswipe.css">
+      <DependentUpon>photoswipe.scss</DependentUpon>
+    </Content>
+    <Content Include="Styles\photoswipe.min.css">
+      <DependentUpon>photoswipe.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\preloader.gif" />
+    <Content Include="Scripts\InitializePhotoSwipe.js" />
+    <Content Include="Scripts\Web.config" />
+    <Content Include="Styles\Web.config" />
+    <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
+      <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
+      <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
+      <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
+      <Name>Orchard.MediaLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tags\Orchard.Tags.csproj">
+      <Project>{5d0f00f0-26c9-4785-ad61-b85710c60eb0}</Project>
+      <Name>Orchard.Tags</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Show\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\ShowController.cs" />
+    <Compile Include="Drivers\MediaTagCloudDriver.cs" />
+    <Compile Include="Handlers\PhoneShapeProvider.cs" />
+    <Compile Include="Handlers\UseragentRedirectSettingsPartHandler.cs" />
+    <Compile Include="Handlers\PhotoSwipeSettingsPartHandler.cs" />
+    <Compile Include="Handlers\PhotoSwipeHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\PhotoSwipeSettingsPart.cs" />
+    <Compile Include="Models\MediaTagCloudPart.cs" />
+    <Compile Include="Models\UseragentRedirectSettingsPart.cs" />
+    <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Routes.cs" />
+    <Compile Include="Services\PhotoSwipeService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\photoswipe.scss" />
+    <Content Include="Styles\_main-settings.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\IsotopePhotoSwipe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cascade-skin.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\PhotoSwipeSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhotoSwipe__Phone.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\SwipeAdaptive.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhotoSwipe.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhotoSwipeGallery.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Show\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhotoSwipeTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\MediaTagCloud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.MediaTagCloud.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ViewModels\TagsViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhotoSwipeTag__Phone.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PhotoSwipeItem.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Filters\UseragentFilter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RuleEngine\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\UseragentRedirectSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\InitializePhotoSwipe.min.js.map">
+      <DependentUpon>InitializePhotoSwipe.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\photoswipe-ui-cascade.min.js.map">
+      <DependentUpon>photoswipe-ui-cascade.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\photoswipe.min.js.map">
+      <DependentUpon>photoswipe.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\cascade-skin.css.map">
+      <DependentUpon>cascade-skin.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\IsotopePhotoSwipeHiphouse.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <PropertyGroup>
+      <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
+    </PropertyGroup>
+    <!-- If this is an area child project, uncomment the following line:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    -->
+    <!-- If this is an area parent project, uncomment the following lines:
+    <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Parent" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
+    <CopyAreaManifests ManifestPath="$(AreasManifestDir)" CrossCopy="false" RenameViews="true" />
+    -->
+  </Target>
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>45979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

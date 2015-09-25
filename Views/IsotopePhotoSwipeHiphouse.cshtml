@@ -1,0 +1,302 @@
+﻿@*
+
+     Isotope + PhotoSwipe template
+
+    NOTES:
+    1. Depends on ImageResizer to provide images of the right size
+    2. Depends on Cascade.Isotope2 for Isotope
+    3. At the moment, the aspect ratio on the thumb must be the same as the expanded image, or strange things will happen. You can try setting option showHideOpacity:true if the aspect ratios differ
+    4. Two options are currently only used by Clayton: Cascade.FlipCard and Cascade.Blurb. Both are optional.
+
+*@
+
+@using Orchard.ContentManagement;
+@using Orchard.MediaLibrary.Models
+@using Cascade.PhotoSwipe.Models
+@using System.Linq
+@using Orchard.UI.Resources;
+@using Orchard.Core.Title.Models;
+@using Orchard.Tags.Models
+
+
+@{
+    IEnumerable<dynamic> items = Model.ContentItems;
+
+
+    var settings = WorkContext.CurrentSite.As<PhotoSwipeSettingsPart>();
+
+    Script.Require("jQuery");
+    Script.Require("Isotope2");
+    Script.Require("PhotoSwipe");
+    Script.Require("PhotoSwipe.UI");
+    Script.Require("InitializePhotoSwipe");
+
+    Style.Require("PhotoSwipe");
+    Style.Require("PhotoSwipe.DefaultSkin");
+
+
+    // initiate Isotope and PhotoSwipe ///////////////////////////////////////
+    using (Script.Foot())
+    {
+        <script type="text/javascript">
+            $(window).load(function(){
+
+                // Isotope
+                // Parse the querystring parameters into an array so we can extract any initial filter param
+                // url?filter=tag-with-spaces-replaced-by-hyphens
+                var match,
+                  pl = /\+/g,  // Regex for replacing addition symbol with a space
+                  search = /([^&=]+)=?([^&]*)/g,
+                  decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+                  query = window.location.search.substring(1);
+
+                var urlParams = {};
+                var selectedClass = null;
+                while (match = search.exec(query))
+                    urlParams[decode(match[1])] = decode(match[2]);
+                var initialTag = urlParams['filter'] || '*';
+                if(initialTag != '*'){
+                    selectedClass = initialTag;
+                    initialTag = '.' + initialTag;
+                }
+
+                // Set initial isotope options
+                var iso = new Isotope('#isotope-container', {
+                    itemSelector: '#isotope-container figure',
+                    animationEngine: 'best-available',
+                    resizable: true, // disable normal resizing
+                    resizesContainer: true,
+                    layoutMode: 'fitRows', // options include fitRows, masonary, cellsByRow, straightDown, masonaryHorizontal, fitColumns, cellsByColumn, straightAcross
+                    filter: initialTag
+                });
+
+
+                // Isotope Filtering
+                var active = $($('#isotope-filters .active')[0]);
+
+                $('#isotope-filters a').on('click', function(e){
+                    // set active tag
+                    if(active)
+                        active.removeClass('active');
+                    active = $(this);
+                    active.addClass('active');
+
+                    var filter = active.attr('data-filter');
+                    if(filter != '*'){
+                        selectedClass = filter;
+                        filter = '.' + filter;
+                    }
+                    iso.arrange({filter: filter});
+
+                    // Support for ClaytonTremlett's Blurbs
+                    var selector = active.attr('data-selector');
+                    var blurb = $('div.blurb-widget');
+                    if(blurb)
+                    {
+                        var url = blurb.attr('data-url');
+                        blurb.hide();
+                        $.get(url, 'selector=' + selector, function (data) {
+                            blurb.html(data);
+                            blurb.delay(250).fadeIn(250);
+                        });
+                    }
+
+                    initPhotoSwipe(selectedClass);
+
+                });
+                initPhotoSwipe(selectedClass);
+
+                // Remove spinner and show gallery
+                $('.spinner').removeClass('show-fast').addClass('hide-fast');
+                $('#gallery').removeClass('hide-fast').addClass('show-fast');
+
+                //iso.arrange();
+
+                function isTrue(v){
+                    return v == 'True';
+                }
+
+
+                function initPhotoSwipe(selectedClass){
+                    // see InitializePhotoSwipe.js
+                    initPhotoSwipeFromDOM('.my-gallery', {
+                        flip: false,
+                        selectedClass: selectedClass,
+                        bgOpacity: @settings.BackgroundOpacity,
+                        showHideOpacity: isTrue('@settings.ShowHideOpacity'),
+                        preload: [@settings.PreloadBefore, @settings.PreloadAfter],
+                        loop: isTrue('@settings.Loop'),
+                        closeOnScroll: isTrue('@settings.CloseOnScroll'),
+                        closeOnVerticalDrag: isTrue('@settings.CloseOnVerticalDrag'),
+                        hideAnimationDuration: @settings.CloseSpeed,
+                        showAnimationDuration: @settings.OpenSpeed,
+                        errorMsg: "<div class='pswp__error-msg'>Sorry, we can't display <a href='%url%' target='_blank'> that image</a> just now. Please try again later.</div>",
+                        scaleMode: '@settings.ScaleMode',
+                        zoomEl: null,
+                        captionEl: document.getElementById('cascade-caption'),
+                        getDoubleTapZoom: function(isMouseClick, item) {
+                            return item.initialZoomLevel;
+                        },
+                        closeElClasses: ['card', 'closable', 'item', 'img', 'zoom-wrap'], // close when image is clicked: TODO: make this a setting
+                        fullscreenEl: isTrue('@settings.ShowFullscreen'),
+                        zoomEl: isTrue('@settings.ShowZoom'),
+                        shareEl: isTrue('@settings.ShowShare')
+
+                    });
+                }
+            });
+        </script>
+
+    }
+
+    @* Get unique Tags *@
+    List<string> uniqueTags = new List<string>();
+    if (items != null && items.Any())
+    {
+        foreach (var item in items)
+        {
+            if (item != null)
+            {
+                TagsPart part = item.TagsPart;
+                if (part != null && part.CurrentTags != null)
+                {
+                    foreach (var t in part.CurrentTags)
+                    {
+                        if (!uniqueTags.Contains(t))
+                        {
+                            uniqueTags.Add(t);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    <div id="cascade-tags">
+        <ul id="isotope-filters" class="portfolio_filters">
+            @*<li>
+                <a class="active" href="#" data-filter="*">All</a>
+            </li>*@
+            @foreach (var tag in uniqueTags.OrderBy(t => t))
+            {
+                <li>
+                    <a href="#" data-filter="@tag.Replace(' ', '-')" data-selector="@tag">@tag</a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="gallery-row">
+        <div class="spinner show-fast">
+            <div class="spinner-icon"></div>
+        </div>
+        <div id="gallery" class="hide-fast">
+            <div id="isotope-container" class="my-gallery">
+
+                @foreach (var item in items)
+                {
+                    ImagePart image = item.ImagePart;
+                    MediaPart media = item.MediaPart;
+                    TitlePart titlepart = item.TitlePart;
+                    string classes = "";
+
+                    if (media != null && !string.IsNullOrEmpty(media.FileName))
+                    {
+                        IEnumerable<string> currentTags = item.TagsPart.CurrentTags;
+                        if (currentTags != null && currentTags.Count() > 0)
+                        {
+                            foreach (var tag in currentTags)
+                            {
+                                if (!string.IsNullOrWhiteSpace(tag) && tag.Length > 2)
+                                {
+                                    classes += tag.Replace(' ', '-') + " ";
+                                }
+                            }
+                        }
+
+                        @Display.PhotoSwipeItem(Item: item, ItemClasses: classes)
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@* The following 'template' is used by PhotoSwipe. I could have moved it to the JS, as most other lightboxes do,
+    but then that makes it hard to modify the UI of the lightbox itself. For flexibility I've put it in the Orchard View,
+    so that you can change the UI without having to touch the JS.
+
+        You need to keep the overall structure. If you want to change something use the following process:
+        1. Is there an option for it?
+            1.1 Is there an Orchard Setting?
+            1.2 Is there a PhotoSwipe option (see <script> tag above)
+        2. Can you change it by changing the css? See photoswipe-ui-default.scss (and css).
+        3. Add or delete elements from the template below, but listen to the comments.
+        4. If all else fails then you'll need to hack the JS. See photoswipe-ui-default.js.
+
+*@
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element, as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Photoswipe interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"><i class="fa fa-close pswp__button--close"></i></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"><i class="fa fa-share pswp__button--share"></i></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"><i class="fa fa-expand pswp__button--fs"></i></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"><i class="fa fa-search-plus pswp__button--zoom"></i></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (left arrow key)"><i class="fa fa-chevron-circle-left pswp__button--arrow--symbol--left"></i></button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (right arrow key)"><i class="fa fa-chevron-circle-right pswp__button--arrow--symbol--right"></i></button>
+
+            <div id="cascade-caption" class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

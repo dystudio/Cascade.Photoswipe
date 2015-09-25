@@ -1,0 +1,47 @@
+<!--Exported from Orchard-->
+<Orchard>
+  <Recipe>
+    <Name>Create Contact Form</Name>
+    <Author>Dave Gardner</Author>
+    <Description>Creates a ContactPart, Contact, Contact Form, enables the Email Module and the Workflow Module, and configures them. Please check email configuration after running this Recipe.</Description>
+    <WebSite>http://cascadepixels.com.au</WebSite>
+    <Tags>developer</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+  <Feature enable="Orchard.Email" />
+  <Feature enable="Orchard.Workflows" />
+  <Feature enable="Orchard.CustomForms" />
+
+  <Metadata>
+    <Types>
+      <Contact ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="False" DisplayName="Contact">
+        <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="False" />
+        <ContactPart />
+      </Contact>
+    </Types>
+
+    <Parts>
+      <ContactPart ContentPartSettings.Attachable="True">
+        <Name.TextField DisplayName="Name" TextFieldSettings.Required="True" TextFieldSettings.Flavor="Large" />
+        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" />
+        <Message.TextField DisplayName="Message" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Textarea" />
+      </ContactPart>
+    </Parts>
+  </Metadata>
+  <Settings>
+      <SmtpSettingsPart Address="depiction@reelmedia.com.au" Host="smtp.sendgrid.net" Port="25" EnableSsl="false" RequireCredentials="true" UserName="azure_2ef860ebcfc6dd365cec22f12287ebdc@azure.com" Password="azure_2ef860ebcfc6dd365cec22f12287ebdc@azure.com" />
+  </Settings>
+  <Data>
+    <CustomForm Id="/alias=contact-us" Status="Published">
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2014-11-28T00:40:54.7374139Z" PublishedUtc="2014-11-28T00:40:54.9092954Z" ModifiedUtc="2014-11-28T00:40:54.7999284Z" />
+      <AutoroutePart Alias="contact-us" UseCustomPattern="false" />
+      <TitlePart Title="Contact Us" />
+      <!--<MenuPart Menu="/Identifier=e45cd9e3508f43439374562575800711" MenuText="Contact" MenuPosition="6" />-->
+      <CustomFormPart ContentType="Contact" SaveContentItem="true" CustomMessage="true" Message="Thanks for getting in touch. We'll get back to you as soon as possible." Redirect="true" RedirectUrl="~/" />
+    </CustomForm>
+    
+  </Data>
+  <Command>
+    menuitem create /MenuPosition:"6" /MenuText:"Contact" /Url:"~/contact-us" /MenuName:"Main Menu"
+  </Command>
+</Orchard>

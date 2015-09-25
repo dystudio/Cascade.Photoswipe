@@ -1,0 +1,54 @@
+<!--Exported from Orchard-->
+<Orchard>
+  <Recipe>
+    <Name>Create Contact Form</Name>
+    <Description>Creates a ContactPart, Contact and Contact Form, turns on the Email Module and configures it. Please Check configuration after running this Recipe.</Description>
+    <Author>Dave Gardner</Author>
+    <WebSite>http://cascadepixels.com.au</WebSite>
+    <Tags>developer</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+  <Metadata>
+    <Types>
+      <Contact ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" DisplayName="Contact">
+        <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="False" />
+        <ContactPart />
+      </Contact>
+    </Types>
+
+    <Parts>
+      <ContactPart ContentPartSettings.Attachable="True">
+        <Name.TextField DisplayName="Name" TextFieldSettings.Required="True" TextFieldSettings.Flavor="Large" />
+        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" />
+        <Message.TextField DisplayName="Message" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Textarea" />
+      </ContactPart>
+    </Parts>
+  </Metadata>
+  <Settings>
+      <SmtpSettingsPart Address="depiction@reelmedia.com.au" Host="smtp.sendgrid.net" Port="25" EnableSsl="false" RequireCredentials="true" UserName="azure_2ef860ebcfc6dd365cec22f12287ebdc@azure.com" Password="azure_2ef860ebcfc6dd365cec22f12287ebdc@azure.com" />
+  </Settings>
+  <Data>
+    <CustomForm Id="/alias=contact-us" Status="Published">
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2014-11-28T00:40:54.7374139Z" PublishedUtc="2014-11-28T00:40:54.9092954Z" ModifiedUtc="2014-11-28T00:40:54.7999284Z" />
+      <AutoroutePart Alias="contact-us" UseCustomPattern="false" />
+      <TitlePart Title="Contact Us" />
+      <MenuPart Menu="/Identifier=e45cd9e3508f43439374562575800711" MenuText="Contact" MenuPosition="6" />
+      <CustomFormPart ContentType="Contact" SaveContentItem="true" CustomMessage="true" Message="Thanks for getting in touch. We'll get back to you as soon as possible." Redirect="true" RedirectUrl="~/" />
+    </CustomForm>
+    <HtmlWidget Id="/Identifier=07f70e55d413473895013cab660c480c" Status="Published">
+      <IdentityPart Identifier="07f70e55d413473895013cab660c480c" />
+      <BodyPart Text="&lt;p&gt;Dave on 0488 075 807&lt;/p&gt;&#xD;&#xA;&lt;p&gt;Murray on 0408 335 790&lt;/p&gt;&#xD;&#xA;&lt;p&gt;e: murray@reelmedia.com.au&lt;/p&gt;&#xD;&#xA;&lt;p&gt;&lt;/p&gt;&#xD;&#xA;&lt;p&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" Container="/Layer.LayerName=Default" CreatedUtc="2014-11-28T00:17:48.9725797Z" PublishedUtc="2014-11-28T00:17:49.0038337Z" ModifiedUtc="2015-02-11T06:14:55.9814164Z" />
+      <WidgetPart Title="Contact Us" Position="1" Zone="FooterQuadFirst" RenderTitle="true" Name="" />
+    </HtmlWidget>
+  </Data>
+  <Roles>
+    <Role Name="Administrator" Permissions="ManageSettings,ApplyTheme,ManageMainMenu,PublishContent,EditContent,DeleteContent,ManageUsers,ManageRoles,AssignRoles,ManageFeatures,SiteOwner,AccessAdminPanel,SetHomePage,ManageMediaContent,ManageWidgets,ManageBlogs,ManageComments,AddComment,ViewContentTypes,EditContentTypes,ManageQueries,ManageTags,ManageTaxonomies,ManageUserStorage" />
+    <Role Name="Editor" Permissions="PublishContent,EditContent,DeleteContent,AccessAdminPanel,SetHomePage,ManageMediaContent,PublishBlogPost,EditBlogPost,DeleteBlogPost,AddComment,ManageQueries,ManageTags,ManageTaxonomies" />
+    <Role Name="Moderator" Permissions="AccessAdminPanel,ManageComments,AddComment,ManageTags,ManageTaxonomies,ManageUserStorage" />
+    <Role Name="Author" Permissions="PublishOwnContent,EditOwnContent,DeleteOwnContent,AccessAdminPanel,ManageMediaContent,ManageOwnBlogs,AddComment,CreateTaxonomy" />
+    <Role Name="Contributor" Permissions="EditOwnContent,AccessAdminPanel,EditOwnBlogPost,AddComment" />
+    <Role Name="Authenticated" Permissions="ViewContent,AccessFrontEnd,AddComment" />
+    <Role Name="Anonymous" Permissions="ViewContent,AddComment,Submit_Contact,AccessFrontEnd" />
+  </Roles>
+</Orchard>
