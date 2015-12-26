@@ -36,9 +36,13 @@
 
 
     // initiate Isotope and PhotoSwipe ///////////////////////////////////////
+    // TODO: There is an issue with Cloudflare rocketscript async loader. 
+    // You must turn rocketscript OFF. Even the data-cfasync=false fails
+    // to work, presumabley because Jquery isn't yet loaded when the script executes.
+    // This is a crock. Async script loading is a crock. Just don't do it.
     using (Script.Foot())
     {
-        <script type="text/javascript">
+        <script data-cfasync="false" type="text/javascript">
             $(window).load(function(){
 
                 // Isotope
