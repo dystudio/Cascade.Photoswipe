@@ -1,6 +1,6 @@
 ﻿using Cascade.PhotoSwipe.Models;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Localization;
 
 namespace Cascade.PhotoSwipe.Handlers
