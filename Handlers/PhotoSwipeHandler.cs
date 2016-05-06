@@ -1,6 +1,7 @@
 ﻿using Cascade.PhotoSwipe.Models;
 using Cascade.PhotoSwipe.Services;
 using Orchard.Caching;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Tags.Models;
 using System.Linq;

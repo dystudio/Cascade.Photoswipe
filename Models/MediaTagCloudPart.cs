@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Utilities;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 using Orchard.Tags.Models;
+using Orchard.ContentManagement.Utilities;
 
 namespace Cascade.PhotoSwipe.Models {
     public class MediaTagCloudPart : ContentPart {
